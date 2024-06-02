@@ -39,5 +39,6 @@
 2. 스크립트를 실행하고 생성된 Gradio 웹 인터페이스에 접속합니다. (`python 장학금.py`)
 3. 웹 인터페이스를 통해 입력을 제공하고 모델의 응답을 확인합니다.
 
-### Dataset
+## Dataset
 - feature_dict.pkl : 각 column 별 LLM을 통해 추출한 feature들이 저장되어있는 저장파일 (https://drive.google.com/file/d/168UJkTbR5j-vX-rVzEQK2btBbIZICEr-/view?usp=sharing)
+- 대학생.csv, 고등학행.csv : 대학생, 고등학생 대상으로 하는 장학금 정보들이 저장되어 있는 csv
