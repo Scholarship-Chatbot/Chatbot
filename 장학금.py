@@ -10,95 +10,105 @@ import pandas as pd
 
 
 STYLE = """
-.custom-btn, .custom-btn-highlight {
+.custom-btn {
     border: none !important;
     background: none !important;
     box-shadow: none !important;
     display: block !important;
     text-align: left !important;
-    padding: 5px 10px;  /* 패딩 조정 */
-    margin-bottom: 2px;  /* 각 버튼 간의 여백 조정 */
+}
+.custom-btn:hover {
+    background: rgb(243 244 246) !important;
 }
 
-.custom-btn:hover, .custom-btn-highlight:hover {
+.custom-btn-highlight {
+    border: none !important;
     background: rgb(243 244 246) !important;
+    box-shadow: none !important;
+    display: block !important;
+    text-align: left !important;
 }
 
 #prompt-txt > label > span {
     display: none !important;
 }
-
 #prompt-txt > label > textarea {
-    border: transparent !important;
-    box-shadow: none !important;
+    border: transparent;
+    box-shadow: none;
 }
-
 #chatbot {
     height: 800px; 
     overflow: auto;
     box-shadow: none !important;
     border: none !important;
-    padding: 0 10px;  /* 내부 패딩 조정 */
 }
-
 #chatbot > .wrap {
     max-height: 780px;
 }
-
 #chatbot + div {
-    border-radius: 15px !important;
-    width: 100% !important;
-    margin: 0 !important;  
+  border-radius: 35px !important;
+  width: 80% !important;
+  margin: auto !important;  
 }
 
-#left-pane, #right-pane {
-    padding: 5px;  /* 패딩 조정 */
-    margin: 0;  /* 여백 제거 */
-    background-color: #f9fafb;  /* 배경색 유지 */
-    border-radius: 10px;  /* 모서리 둥글게 */
+#left-pane {
+    background-color: #f9fafb;
+    border-radius: 15px;
+    padding: 10px;
 }
 
 #left-top {
-    padding: 5px;  /* 상단 텍스트 패딩 조정 */
+    padding-left: 10px;
+    padding-right: 10px;
     text-align: center;
     font-weight: bold;
-    font-size: large;
+    font-size: large;    
 }
 
 #chat-history-accordion {
     background: transparent;
-    border: none !important;
-    margin: 0;
-    padding: 0;
+    border: 0.8px !important;  
+}
+
+#right-pane {
+  margin-left: 20px;
+  margin-right: 70px;
 }
 
 #initial-popup {
     z-index: 100;
     position: absolute;
-    width: 40%;  /* 팝업 폭 조정 */
+    width: 50%;
     top: 50%;
-    height: 40%;  /* 팝업 높이 조정 */
+    height: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 20px;
-    padding: 10px;  /* 팝업 내부 패딩 조정 */
+    border-radius: 35px;
+    padding: 15px;
 }
 
 #initial-popup-title {
     text-align: center;
-    font-size: 16px;  /* 제목 폰트 크기 조정 */
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: bold;    
 }
 
-#initial-popup-left-pane, #initial-popup-right-pane {
-    padding: 5px;  /* 팝업 내부 요소 패딩 조정 */
+#initial-popup-left-pane {
+    min-width: 150px !important;
+}
+
+#initial-popup-right-pane {
+    text-align: right;
 }
 
 .example-btn {
-    padding: 10px !important;  /* 예제 버튼 패딩 조정 */
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
     background: linear-gradient(to bottom right, #f7faff, #ffffff) !important;
     box-shadow: none !important;
-    border-radius: 10px !important;
+    border-radius: 20px !important;
 }
 
 .example-btn:hover {
@@ -106,21 +116,20 @@ STYLE = """
 }
 
 #example-title {
-    margin-bottom: 10px;  /* 예제 제목의 하단 여백 조정 */
+  margin-bottom: 15px;
 }
 
 #aux-btns-popup {
     z-index: 200;
     position: absolute !important;
-    bottom: 20px !important;  /* 위치 조정 */
+    bottom: 75px !important;
     right: 15px !important;
-    padding: 0;  /* 패딩 제거 */
 }
 
 #aux-btns-popup > div {
     flex-wrap: nowrap;
     width: auto;
-    margin: 0;  
+    margin: auto;  
 }
 
 .aux-btn {
@@ -130,6 +139,7 @@ STYLE = """
     min-width: min(100px,100%) !important;
     font-weight: unset !important;
     font-size: 10pt !important;
+
     background: linear-gradient(to bottom right, #f7faff, #ffffff) !important;
     box-shadow: none !important;
     border-radius: 20px !important;    
@@ -201,7 +211,7 @@ channels = [
     "7th Channel",
     "8th Channel",
     "9th Channel",
-    "10th Channel"
+    "10th Channel",
 ]
 channel_btns = []
 
@@ -289,7 +299,7 @@ class ScholarshipFiltering:
 
         common_indices = list(common_indices)
 
-        return common_indices
+        return common_indices[:2]
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_name = "BM-K/KoSimCSE-roberta"
@@ -304,13 +314,13 @@ filtering_cols = ["대학구분", "학년구분", "학과구분"]
 
 # 로드된 feature 파일로 ScholarshipFiltering 초기화
 scholarship_df = pd.read_csv("대학생.csv", encoding="cp949")
-#filtering = ScholarshipFiltering(model, tokenizer, filtering_cols, device, scholarship_feature=scholarship_feature)
+
 filtering = ScholarshipFiltering(model, tokenizer, filtering_cols, device, scholarship_feature=scholarship_feature, scholarship_df=scholarship_df)
 # 대화 흐름
 conversation_flow = [
     "몇년제 대학 다니나요?",
-    "몇 학년인가요?",
-    "어떤 학과에 재학 중인가요?"
+    "몇 학기인가요?",
+    "어떤 계열에 재학 중인가요?"
 ]
 conversation_states = {}  # 각 채널의 상태를 추적하기 위해 사용
 
@@ -325,7 +335,7 @@ def add_pingpong(idx, ld, ping):
     current_state = conversation_states[channel]
     
     # 사용자의 인사말을 무시하고 질문을 시작하도록 로직 수정
-    greetings = ["안녕", "안녕하세요", "hi", "hello"]  # 예상되는 인사말 목록
+    greetings = ["장학금 추천해줘", "안녕하세요", "hi", "hello", "장학금"]  # 예상되는 인사말 목록
     if ping.lower() in greetings and current_state["step"] == 0:
         # 인사말이 들어올 경우, 첫 번째 질문으로 응답
         response = conversation_flow[current_state["step"]]
